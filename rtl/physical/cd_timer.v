@@ -19,72 +19,79 @@ module phy_timer #(
     output wire disc_done
 );
 
-localparam integer PRESCALE_TC = (SYS_CLK_HZ/TICK_HZ)-1;
+localparam integer PRESCALE_TOTAL_COUNT = (SYS_CLK_HZ/TICK_HZ)-1;
 
-localparam integer ERRWAIT_TICKS = (ERRWAIT_TIMEOUT+PRESCALE_TC)/(PRESCALE_TC+1);
-localparam integer DISC_TICKS = (DISC_TIMEOUT+PRESCALE_TC)/(PRESCALE_TC+1);
+localparam integer ERRWAIT_TICKS = (ERRWAIT_TIMEOUT+PRESCALE_TOTAL_COUNT)/(PRESCALE_TOTAL_COUNT+1);
+localparam integer DISC_TICKS = (DISC_TIMEOUT+PRESCALE_TOTAL_COUNT)/(PRESCALE_TOTAL_COUNT+1);
 
 localparam integer MAX_TICKS = (ERRWAIT_TICKS>DISC_TICKS)?ERRWAIT_TICKS:DISC_TICKS;
 
 localparam integer COUNT_WIDTH = $clog2(MAX_TICKS+1);
-localparam integer PRESCALER_WIDTH = $clog2(PRESCALE_TC+1);
+localparam integer PRESCALER_WIDTH = $clog2(PRESCALE_TOTAL_COUNT+1);
 
-localparam IDLE_MODE = 1'b0;
-localparam DISC_MODE = 1'b1;
+localparam MODE_IDLE = 1'b0;
+localparam MODE_DISC = 1'b1;
 
-reg mode_r;
 
-reg [PRESCALER_WIDTH-1:0] prescale_r;
-wire prescale_done = (prescale_r == {PRESCALER_WIDTH{1'b0}});
+reg modeReg ;
+reg [PRESCALER_WIDTH-1:0] prescaleReg;
+wire prescalerDone = (prescaleReg == 0);
+assign tick = prescaleDone;
 
-assign tick = prescale_done;
-
-always @(posedge clk) begin
+always@(posedge clk) begin
     if(!rst_n) begin
-        prescale_r<=PRESCALER_WIDTH'(PRESCALE_TC);
+        prescaleReg <= PRESCALER_WIDTH'(PRESCALE_TOTAL_COUNT);
     end
     else begin
-        if(prescale_done) prescale_r<= PRESCALER_WIDTH'(PRESCALE_TC);
-        else prescale_r<=prescale_r-1'b1;
+        if(prescaleDone) prescaleReg <= PRESCALER_WIDTH'(PRESCALE_TOTAL_COUNT);
+        else begin
+            prescaleReg<= prescaleReg-1b1;
+        end
     end
 end
 
-reg [COUNT_WIDTH-1:0] downcnt_r;
-wire downcnt_zero = (downcnt_r=={COUNT_WIDTH{1'b0}});
+reg [COUNT_WIDTH-1:0] downCntReg;
+wire downCountZero = (downCntReg == 0);
 
-reg errwait_done_r;
-reg disc_done_r;
+reg errWaitDoneReg, discDoneReg;
+assign errwait_done = errWaitDoneReg;
+assign disc_done = discDoneReg;
 
-assign errwait_done = errwait_done_r;
-assign disc_done = disc_done_r;
-
-always @(posedge clk) begin
+always@(posedge clk) begin
     if(!rst_n) begin
-        downcnt_r<={COUNT_WIDTH{1'b0}};
-        mode_r<=IDLE_MODE;
-        errwait_done_r<=1'b0;
-        disc_done_r<=1'b0;
+        downCntReg<=0;
+        errWaitDoneReg<=1'b0;
+        discDoneReg<=1'b0;
+        modeReg<=MODE_IDLE;
+    end
+    else begin
+        errWaitDoneReg<=1'b0;
+        discDoneReg<=1'b0;
 
-    end else begin
-        errwait_done_r<=1'b0;
-        disc_done_r<=1'b0;
         if(arm_errwait) begin
-            downcnt_r<=COUNT_WIDTH'(ERRWAIT_TICKS);
-            mode_r<= IDLE_MODE;
-        end else if(arm_disc) begin
-            downcnt_r<= COUNT_WIDTH'(DISC_TICKS);
-            mode_r<= DISC_MODE;
-        end else if(prescale_done && !downcnt_zero) begin
-            downcnt_r <= downcnt_r - 1'b1;
-        end else if(prescale_done && downcnt_zero) begin
-            case(mode_r)
-                IDLE_MODE: errwait_done_r <= 1'b1;
-                DISC_MODE: disc_done_r    <= 1'b1;
+            downCntReg<= COUNT_WIDTH'(ERRWAIT_TICKS);
+            modeReg <= MODE_IDLE;
+        end
+        else if (arm_disc) begin
+            downCntReg <= COUNT_WIDTH'(DISC_TICKS);
+            modeReg<= MODE_DISC;
+        end
+        else if (disc_refresh && modeReg == MODE_DISC) begin
+            downCntReg<= COUNT_WIDTH'(DISC_TICKS);
+        end
+        else if (prescaleDone && !downCountZero) begin
+            downCntReg<= downCntReg-1'b1;
+        end
+        else if(prescaleDone && downCountZero) begin
+            case(modeReg)
+                MODE_IDLE: errWaitDoneReg<=1'b1;
+                MODE_DISC: discDoneReg<=1'b1;
                 default:;
             endcase
         end
     end
 end
+
 
 
     
