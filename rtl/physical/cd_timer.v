@@ -35,7 +35,7 @@ localparam MODE_DISC = 1'b1;
 
 reg modeReg ;
 reg [PRESCALER_WIDTH-1:0] prescaleReg;
-wire prescalerDone = (prescaleReg == 0);
+wire prescaleDone = (prescaleReg == 0);
 assign tick = prescaleDone;
 
 always@(posedge clk) begin
@@ -45,7 +45,7 @@ always@(posedge clk) begin
     else begin
         if(prescaleDone) prescaleReg <= PRESCALER_WIDTH'(PRESCALE_TOTAL_COUNT);
         else begin
-            prescaleReg<= prescaleReg-1b1;
+            prescaleReg<= prescaleReg-1'b1;
         end
     end
 end
