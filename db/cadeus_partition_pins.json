@@ -1,0 +1,153 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "Dout",
+					"strict" : false
+				},
+				{
+					"name" : "Sout",
+					"strict" : false
+				},
+				{
+					"name" : "tx_ready",
+					"strict" : false
+				},
+				{
+					"name" : "tx_done",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[0]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[1]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[2]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[3]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[4]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[5]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[6]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[7]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[8]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_char[9]",
+					"strict" : false
+				},
+				{
+					"name" : "rx_valid",
+					"strict" : false
+				},
+				{
+					"name" : "parity_err",
+					"strict" : false
+				},
+				{
+					"name" : "errwait_done",
+					"strict" : false
+				},
+				{
+					"name" : "disc_done",
+					"strict" : false
+				},
+				{
+					"name" : "tick",
+					"strict" : false
+				},
+				{
+					"name" : "clk",
+					"strict" : false
+				},
+				{
+					"name" : "rst_n",
+					"strict" : false
+				},
+				{
+					"name" : "arm_errwait",
+					"strict" : false
+				},
+				{
+					"name" : "arm_disc",
+					"strict" : false
+				},
+				{
+					"name" : "tx_valid",
+					"strict" : false
+				},
+				{
+					"name" : "rx_en",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[0]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[1]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[2]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[3]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[8]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[4]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[5]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[6]",
+					"strict" : false
+				},
+				{
+					"name" : "tx_char[7]",
+					"strict" : false
+				},
+				{
+					"name" : "Din",
+					"strict" : false
+				},
+				{
+					"name" : "Sin",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

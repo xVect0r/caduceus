@@ -9,10 +9,8 @@ module phy_cdc_sync #(
     output wire [WIDTH-1:0] dout
 );
 
-
 // 3 FlipFlop chain to keep metastability at bay
 // Just formed a joke: " An extra flipflop in your design forces the metastability to resign... Sorry :'( "
-
 
 (*keep = "true"*)
 reg [WIDTH-1:0] ff1_r;

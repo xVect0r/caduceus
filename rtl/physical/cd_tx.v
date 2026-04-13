@@ -21,6 +21,10 @@ localparam MODE_IDLE = 2'b00;
 localparam MODE_TRANSMIT = 2'b01;
 localparam MODE_DONE = 2'b10;
 
+reg[1:0] stateCurr, stateNext;
+reg txStart;
+reg txDoneReg;
+reg outReg;
 
 reg nextBit;
 reg [$clog2(CLK_REG_COUNT)-1:0] clkCount;
@@ -56,10 +60,6 @@ always@(posedge clk) begin
 end
 
 
-reg[1:0] stateCurr, stateNext;
-reg txStart;
-reg txDoneReg;
-reg outReg;
 
 always@(posedge clk) begin
     if(!rst_n) stateCurr<= MODE_IDLE;

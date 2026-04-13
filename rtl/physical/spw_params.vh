@@ -19,13 +19,6 @@
 
 `define SPW_RMAP_EN              1   
 `define SPW_TIMECODE_EN          1   
-`define SPW_ROUTER_PORTS         4   
-
-`define SPW_ST_ERROR_RESET       3'd0
-`define SPW_ST_ERROR_WAIT        3'd1
-`define SPW_ST_READY             3'd2
-`define SPW_ST_STARTED           3'd3
-`define SPW_ST_CONNECTING        3'd4
-`define SPW_ST_RUN               3'd5
+`define SPW_ROUTER_PORTS         4  
 
 `endif 

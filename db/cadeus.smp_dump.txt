@@ -1,0 +1,12 @@
+
+State Machine - |phy_top|cd_tx:u_cd_tx|stateNext
+Name stateNext.MODE_IDLE stateNext.MODE_DONE stateNext.MODE_TRANSMIT 
+stateNext.MODE_IDLE 0 0 0 
+stateNext.MODE_TRANSMIT 1 0 1 
+stateNext.MODE_DONE 1 1 0 
+
+State Machine - |phy_top|cd_tx:u_cd_tx|stateCurr
+Name stateCurr.MODE_IDLE stateCurr.MODE_DONE stateCurr.MODE_TRANSMIT 
+stateCurr.MODE_IDLE 0 0 0 
+stateCurr.MODE_TRANSMIT 1 0 1 
+stateCurr.MODE_DONE 1 1 0 

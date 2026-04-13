@@ -1,0 +1,54 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/DeskTop/caduceus/simulation/modelsim
+vhard_block
+Z1 !s110 1774582972
+!i10b 1
+!s100 >0ha^ReWbPU68jLh:DhPa2
+Ia0_P3AFRB0WYo`gJIX^i51
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z3 w1774582860
+Z4 8cadeus.vo
+Z5 Fcadeus.vo
+L0 4948
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1774582971.000000
+Z8 !s107 cadeus.vo|
+Z9 !s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+.|cadeus.vo|
+!i113 1
+Z10 o-vlog01compat -work work
+Z11 !s92 -vlog01compat -work work +incdir+.
+Z12 tCvgOpt 0
+vphy_top
+R1
+!i10b 1
+!s100 _j?Q_OoQDWj6>Hf:;:M^^1
+I0O>[]7VAU?mRnN_PWA=_m2
+R2
+R0
+R3
+R4
+R5
+L0 32
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+R12

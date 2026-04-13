@@ -1,0 +1,162 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/DeskTop/caduceus/simulation/modelsim
+vcd_ds
+Z1 !s110 1774583742
+!i10b 1
+!s100 iP8ZKJeL<384Z8jKc_;zd1
+IBhTh]i@RK2?EaDCFVO1GH1
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1774582385
+8D:/DeskTop/caduceus/rtl/physical/cd_ds.v
+FD:/DeskTop/caduceus/rtl/physical/cd_ds.v
+L0 3
+Z3 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z4 !s108 1774583742.000000
+!s107 D:/DeskTop/caduceus/rtl/physical/spw_params.vh|D:/DeskTop/caduceus/rtl/physical/cd_ds.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+D:/DeskTop/caduceus/rtl/physical|D:/DeskTop/caduceus/rtl/physical/cd_ds.v|
+!i113 1
+Z5 o-vlog01compat -work work
+Z6 !s92 -vlog01compat -work work +incdir+D:/DeskTop/caduceus/rtl/physical
+Z7 tCvgOpt 0
+vcd_parity
+Z8 !s110 1774583741
+!i10b 1
+!s100 EYP:IVfDD7Xlf:EjT70b?0
+IB[Hz3f0G_F0QiWKP8FFQV3
+R2
+R0
+w1774582772
+8D:/DeskTop/caduceus/rtl/physical/cd_parity.v
+FD:/DeskTop/caduceus/rtl/physical/cd_parity.v
+L0 3
+R3
+r1
+!s85 0
+31
+Z9 !s108 1774583741.000000
+!s107 D:/DeskTop/caduceus/rtl/physical/spw_params.vh|D:/DeskTop/caduceus/rtl/physical/cd_parity.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+D:/DeskTop/caduceus/rtl/physical|D:/DeskTop/caduceus/rtl/physical/cd_parity.v|
+!i113 1
+R5
+R6
+R7
+vcd_tx
+R8
+!i10b 1
+!s100 e:>RQcnZM3ERD3CoPSL9:2
+IjQN4lER>f90=iG;e7X@;40
+R2
+R0
+w1774583307
+8D:/DeskTop/caduceus/rtl/physical/cd_tx.v
+FD:/DeskTop/caduceus/rtl/physical/cd_tx.v
+L0 5
+R3
+r1
+!s85 0
+31
+R9
+!s107 D:/DeskTop/caduceus/rtl/physical/spw_params.vh|D:/DeskTop/caduceus/rtl/physical/cd_tx.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+D:/DeskTop/caduceus/rtl/physical|D:/DeskTop/caduceus/rtl/physical/cd_tx.v|
+!i113 1
+R5
+R6
+R7
+vhard_block
+Z10 !s110 1774583873
+!i10b 1
+!s100 >0ha^ReWbPU68jLh:DhPa2
+IzEke2IgdShNCji5KK;[fB0
+R2
+R0
+Z11 w1774582860
+Z12 8D:/DeskTop/caduceus/simulation/modelsim/cadeus.vo
+Z13 FD:/DeskTop/caduceus/simulation/modelsim/cadeus.vo
+L0 4948
+R3
+r1
+!s85 0
+31
+Z14 !s108 1774583873.000000
+Z15 !s107 D:/DeskTop/caduceus/simulation/modelsim/cadeus.vo|
+Z16 !s90 -reportprogress|300|-work|work|D:/DeskTop/caduceus/simulation/modelsim/cadeus.vo|
+!i113 1
+Z17 o-work work
+R7
+vphy_cdc_sync
+R1
+!i10b 1
+!s100 LHY0nlL80HSB]oU1:`k:E3
+IHfGY_<Clh_JKX=XAhXmQ_2
+R2
+R0
+w1774581286
+8D:/DeskTop/caduceus/rtl/physical/cd_cdc_sync.v
+FD:/DeskTop/caduceus/rtl/physical/cd_cdc_sync.v
+L0 3
+R3
+r1
+!s85 0
+31
+R4
+!s107 D:/DeskTop/caduceus/rtl/physical/spw_params.vh|D:/DeskTop/caduceus/rtl/physical/cd_cdc_sync.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+D:/DeskTop/caduceus/rtl/physical|D:/DeskTop/caduceus/rtl/physical/cd_cdc_sync.v|
+!i113 1
+R5
+R6
+R7
+vphy_timer
+R8
+!i10b 1
+!s100 ?TLL;L]Ua?QH]?RH0<TPY3
+I3J>kD9NWW[UbGNmVcH_;Z1
+R2
+R0
+w1774582612
+8D:/DeskTop/caduceus/rtl/physical/cd_timer.v
+FD:/DeskTop/caduceus/rtl/physical/cd_timer.v
+L0 3
+R3
+r1
+!s85 0
+31
+R9
+!s107 D:/DeskTop/caduceus/rtl/physical/spw_params.vh|D:/DeskTop/caduceus/rtl/physical/cd_timer.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+D:/DeskTop/caduceus/rtl/physical|D:/DeskTop/caduceus/rtl/physical/cd_timer.v|
+!i113 1
+R5
+R6
+R7
+vphy_top
+R10
+!i10b 1
+!s100 _j?Q_OoQDWj6>Hf:;:M^^1
+IVU6RAjScIdD6okCeci_a@2
+R2
+R0
+R11
+R12
+R13
+L0 32
+R3
+r1
+!s85 0
+31
+R14
+R15
+R16
+!i113 1
+R17
+R7

@@ -50,7 +50,7 @@ reg[3:0] bit_cnt_g;
 reg[9:0] rx_buf;
 
 wire xor_cur = din^sin;
-wire edge = xor_cur^xor_prev;
+wire dsEdge = xor_cur^xor_prev;
 wire[3:0] bit_index = gray_to_bin(bit_cnt_g);
 wire last_bit=(bit_index==4'd9);
 
@@ -66,7 +66,7 @@ always @(posedge clk) begin
         rx_valid     <= 1'b0;
         disc_refresh <= 1'b0;
         xor_prev <= xor_cur;
-        if (rx_en && edge) begin
+        if (rx_en && dsEdge) begin
             rx_buf[bit_index] <= din;
             disc_refresh <= 1'b1;
             if (last_bit) begin

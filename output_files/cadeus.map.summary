@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Fri Mar 27 09:10:04 2026
+Quartus Prime Version : 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+Revision Name : cadeus
+Top-level Entity Name : phy_top
+Family : MAX 10
+Total logic elements : 139
+    Total combinational functions : 129
+    Dedicated logic registers : 92
+Total registers : 92
+Total pins : 37
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

@@ -1,6 +1,6 @@
 `include "spw_params.vh"
 
-module phy_parity (
+module cd_parity (
     input wire clk,
     input wire rst_n,
     input wire mode, // TX = 0, RX = 1
@@ -28,8 +28,12 @@ always @(posedge clk) begin
         valid_out <= 1'b0;
         parity_err <=1'b0;
         if(!mode) begin
-            char_out <= characters_with_parity;
-        end else begin
+            if(valid_in) begin
+                char_out <= characters_with_parity;
+                valid_out<=1'b1;
+            end
+        end 
+        else begin
             if(valid_in) begin
                 char_out <=char_in;
                 valid_out<=1'b1;

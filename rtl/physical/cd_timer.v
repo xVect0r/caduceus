@@ -40,10 +40,10 @@ assign tick = prescaleDone;
 
 always@(posedge clk) begin
     if(!rst_n) begin
-        prescaleReg <= PRESCALER_WIDTH'(PRESCALE_TOTAL_COUNT);
+        prescaleReg <= PRESCALE_TOTAL_COUNT[PRESCALER_WIDTH-1:0];
     end
     else begin
-        if(prescaleDone) prescaleReg <= PRESCALER_WIDTH'(PRESCALE_TOTAL_COUNT);
+        if(prescaleDone) prescaleReg <= PRESCALE_TOTAL_COUNT[PRESCALER_WIDTH-1:0];
         else begin
             prescaleReg<= prescaleReg-1'b1;
         end
@@ -69,15 +69,15 @@ always@(posedge clk) begin
         discDoneReg<=1'b0;
 
         if(arm_errwait) begin
-            downCntReg<= COUNT_WIDTH'(ERRWAIT_TICKS);
+            downCntReg<= ERRWAIT_TICKS[COUNT_WIDTH-1:0]; 
             modeReg <= MODE_IDLE;
         end
         else if (arm_disc) begin
-            downCntReg <= COUNT_WIDTH'(DISC_TICKS);
+            downCntReg <= DISC_TICKS[COUNT_WIDTH-1:0];  
             modeReg<= MODE_DISC;
         end
         else if (disc_refresh && modeReg == MODE_DISC) begin
-            downCntReg<= COUNT_WIDTH'(DISC_TICKS);
+            downCntReg<= DISC_TICKS[COUNT_WIDTH-1:0];
         end
         else if (prescaleDone && !downCountZero) begin
             downCntReg<= downCntReg-1'b1;

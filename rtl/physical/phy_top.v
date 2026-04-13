@@ -58,6 +58,7 @@ cd_ds u_cd_ds (
     .disc_refresh(disc_refresh)
 );
 wire [9:0] par_rx_char_out;
+wire par_tx_valid_out;
 wire par_rx_valid_out;
 wire par_parity_err;
 
@@ -82,15 +83,17 @@ cd_parity u_parity_tx (
     .char_in    (tx_char),
     .valid_in   (tx_valid),
     .char_out   (par_tx_char_out),
-    .valid_out  (), // unused
+    .valid_out  (par_tx_valid_out), // unused
     .parity_err ()  // unused 
 );
+
+
 
 cd_tx u_cd_tx (
     .clk      (clk),
     .rst_n    (rst_n),
     .tx_char  (par_tx_char_out),
-    .tx_valid (tx_valid),
+    .tx_valid (par_tx_valid_out),
     .tx_ready (tx_ready),
     .tx_done  (tx_done),
     .Dout     (Dout),
