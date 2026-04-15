@@ -95,8 +95,8 @@ phy_top u_phy_top (
     .rx_char(rxChar),
     .rx_valid(phyRxValid),
     .parity_err(parityErr),
-    .rx_en(linkRun | linkConnecting),
-
+//    .rx_en(linkRun | linkConnecting),
+    .rx_en(~linkError),
     .arm_errwait(linkError),
     .arm_disc(linkRun | linkConnecting),
     .errwait_done(),

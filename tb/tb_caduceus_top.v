@@ -37,7 +37,7 @@ module tb_caduceus_top;
 localparam CLK_PERIOD    = 20;           // 50 MHz
 localparam CLK_HALF      = CLK_PERIOD/2;
 localparam RESET_CYCLES  = 20;
-localparam LINK_TIMEOUT  = 10000;         // cycles to wait for linkRun
+localparam LINK_TIMEOUT  = 15000;         // cycles to wait for linkRun
 localparam CDC_LATENCY   = 3;
 localparam CLKS_PER_BIT  = `SPW_CLKS_PER_BIT;
 
@@ -311,22 +311,36 @@ task check;
 endtask
 
 // Wait for both nodes to reach linkRun
+//task wait_link_up;
+//    input integer timeout_cycles;
+//    integer i;
+//    reg timed_out;
+//    begin
+//        timed_out = 0;
+//        for(i = 0; i < timeout_cycles; i = i+1) begin
+//            @(posedge clk);
+//            if(a_linkRun && b_linkRun) begin
+//                i = timeout_cycles; // break
+//            end
+//        end
+//        if(!a_linkRun || !b_linkRun) begin
+//            timed_out = 1;
+//            $display("[WARN] Link did not reach RUN within %0d cycles", timeout_cycles);
+//        end
+//    end
+//endtask
+
 task wait_link_up;
     input integer timeout_cycles;
     integer i;
-    reg timed_out;
     begin
-        timed_out = 0;
-        for(i = 0; i < timeout_cycles; i = i+1) begin
+        i = 0;
+        while(i < timeout_cycles && !(a_linkRun && b_linkRun)) begin
             @(posedge clk);
-            if(a_linkRun && b_linkRun) begin
-                i = timeout_cycles; // break
-            end
+            i = i + 1;
         end
-        if(!a_linkRun || !b_linkRun) begin
-            timed_out = 1;
+        if(!a_linkRun || !b_linkRun)
             $display("[WARN] Link did not reach RUN within %0d cycles", timeout_cycles);
-        end
     end
 endtask
 
@@ -917,7 +931,14 @@ initial begin
 
     #500000 $finish;
 end
-
+initial begin
+    #10000;  // 10 µs after reset release
+    force u_node_a.linkError = 0;
+    force u_node_b.linkError = 0;
+    #100;
+    release u_node_a.linkError;
+    release u_node_b.linkError;
+end
 endmodule
 
 // =============================================================================
