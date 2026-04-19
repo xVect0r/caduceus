@@ -45,6 +45,7 @@ module char_decode (
                 isTimecode <= 0;
                 isInvalidChar <= 0;
                 ncharData <= 0;
+                timeData <= 0;
                 if (prevEsc) begin
                     if (rxChar[0] == 1'b1 && rxChar[8:1] == FCT) begin
                         isNULL <= 1'b1;
@@ -73,17 +74,17 @@ module char_decode (
                     end
                 end
             end
-            else begin
-                isNULL <= 0;
-                isFCT <= 0;
-                isEOP <= 0;
-                isEEP <= 0;
-                isNchar <= 0;
-                isTimecode <= 0;
-                isInvalidChar <= 0;
-                timeData <= 0;
-                ncharData <= 0;
-            end
+            // else begin
+            //     isNULL <= 0;
+            //     isFCT <= 0;
+            //     isEOP <= 0;
+            //     isEEP <= 0;
+            //     isNchar <= 0;
+            //     isTimecode <= 0;
+            //     isInvalidChar <= 0;
+            //     timeData <= 0;
+            //     ncharData <= 0;
+            // end
         end
     end
 endmodule

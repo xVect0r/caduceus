@@ -48,12 +48,14 @@ end
 
 
 reg [$clog2(PACKET_LENGTH)-1:0] packetCount ;
+
+wire lastBit = (packetCount==PACKET_LENGTH-1);
 always@(posedge clk) begin
     if(!rst_n) begin
         packetCount<=0;
     end
     else if (nextBit && stateCurr == MODE_TRANSMIT) begin
-        if(packetCount == PACKET_LENGTH-1) packetCount<= 0; 
+        if(lastBit) packetCount<= 0; 
         else packetCount <= {packetCount}+1'b1;
         
     end
@@ -62,20 +64,25 @@ end
 
 
 always@(posedge clk) begin
-    if(!rst_n) stateCurr<= MODE_IDLE;
+    if(!rst_n) begin 
+        stateCurr<= MODE_IDLE;
+        stateNext<=MODE_IDLE;
+        txDoneReg<=1'b0;
+
+    end
     else begin
         stateCurr <= stateNext;
-        txStart <= 1'b0;
+        // txStart <= 1'b0;
         txDoneReg<= 1'b0;
         case (stateCurr)
             MODE_IDLE: begin
                 if(tx_valid) begin
                     stateNext<= MODE_TRANSMIT;
-                    txStart <=1'b1;
+                    // txStart <=1'b1;
                 end
             end 
             MODE_TRANSMIT: begin
-                if(packetCount == PACKET_LENGTH-1) begin
+                if(nextBit && lastBit) begin
                     stateNext<= MODE_DONE;
                     txDoneReg<=1'b1;
                 end
@@ -99,22 +106,22 @@ always@(posedge clk) begin
             inDataReg <= tx_char;
         end
     else begin
-        if(nextBit) begin
             
             if(stateCurr == MODE_IDLE && tx_valid) begin 
-                outDataReg <= inDataReg[packetCount];
+                
                 inDataReg <= tx_char;
-            end 
-            else begin
-                outDataReg <= inDataReg[packetCount];
+            
             end
+            if (stateCurr==MODE_TRANSMIT && nextBit) begin
+                outDataReg<=inDataReg[packetCount];
+            end 
+//            else begin
+//                outDataReg <= inDataReg[packetCount];
+//            end
         
-        end
+    
     end
 end
-
-assign tx_ready = (stateCurr==MODE_IDLE);
-assign tx_done = txDoneReg;
 
 reg dOutReg, sOutReg;
 always@(posedge clk) begin
@@ -130,6 +137,10 @@ always@(posedge clk) begin
     end
 end
 
+
+assign tx_ready = (stateCurr==MODE_IDLE);
+assign tx_done = txDoneReg;
 assign Dout = dOutReg;
 assign Sout = sOutReg;
+
 endmodule

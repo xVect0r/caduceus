@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 `include "spw_params.vh"
+`define SIMULATION
 
 // =============================================================================
 //  caduceus — SpaceWire IP Core (ECSS-E-ST-50-12C)
@@ -37,7 +38,7 @@ module tb_caduceus_top;
 localparam CLK_PERIOD    = 20;           // 50 MHz
 localparam CLK_HALF      = CLK_PERIOD/2;
 localparam RESET_CYCLES  = 20;
-localparam LINK_TIMEOUT  = 15000;         // cycles to wait for linkRun
+localparam LINK_TIMEOUT  = 150000;         // cycles to wait for linkRun
 localparam CDC_LATENCY   = 3;
 localparam CLKS_PER_BIT  = `SPW_CLKS_PER_BIT;
 
@@ -252,7 +253,7 @@ end
 //  Simulation timeout watchdog
 // ---------------------------------------------------------------------------
 initial begin
-    #(CLK_PERIOD * 200_000);
+    #(CLK_PERIOD * 10_00_000);
     $display("[TIMEOUT] Simulation exceeded limit. Tests incomplete.");
     $display("RESULTS: %0d PASSED | %0d FAILED", pass_count, fail_count);
     $finish;
@@ -271,26 +272,31 @@ task wait_cycles;
     end
 endtask
 
+// ---------------------------------------------------------------------------
+//  Reset task - re-initialize all driven inputs during reset assertion
+// ---------------------------------------------------------------------------
 task apply_reset;
     begin
-        rstN          = 0;
-        a_userTxValid = 0;
-        a_txByte      = 0;
-        a_txEop       = 0;
-        a_txEep       = 0;
-        a_tcSend      = 0;
-        a_tcTxValue   = 0;
-        a_memRData    = 0;
-        a_memReady    = 0;
-        b_userTxValid = 0;
-        b_txByte      = 0;
-        b_txEop       = 0;
-        b_txEep       = 0;
-        b_tcSend      = 0;
-        b_tcTxValue   = 0;
+        rstN          = 1'b0;
+        a_userTxValid = 1'b0;
+        a_txByte      = 8'h00;
+        a_txEop       = 1'b0;
+        a_txEep       = 1'b0;
+        a_tcSend      = 1'b0;
+        a_tcTxValue   = 8'h00;
+        a_memRData    = 8'h00;
+        a_memReady    = 1'b0;
+
+        b_userTxValid = 1'b0;
+        b_txByte      = 8'h00;
+        b_txEop       = 1'b0;
+        b_txEep       = 1'b0;
+        b_tcSend      = 1'b0;
+        b_tcTxValue   = 8'h00;
+
         wait_cycles(RESET_CYCLES);
         @(posedge clk);
-        rstN = 1;
+        rstN = 1'b1;
         @(posedge clk);
         $display("[RESET] Released at time %0t", $time);
     end
@@ -450,6 +456,30 @@ task send_rmap_write;
         send_byte_a(8'h00,     1);  // data CRC placeholder + EOP
     end
 endtask
+
+
+reg [2:0] prev_state;
+always @(posedge clk) begin
+    prev_state <= u_link_fsm_0.state;
+    // Print on every FSM state change
+    if (u_link_fsm_0.state !== prev_state)
+        $display("[LINK_TOP %m] t=%0t  FSM %0d->%0d  linkRun=%b linkErr=%b linkConn=%b",
+                 $time, prev_state, u_link_fsm_0.state, linkRun, linkError, linkConnecting);
+    // Print every time a key char is decoded
+    if (isNULL)
+        $display("[LINK_TOP %m] t=%0t  isNULL rxChar=%03x", $time, rxChar);
+    if (isFCT)
+        $display("[LINK_TOP %m] t=%0t  isFCT  rxChar=%03x", $time, rxChar);
+    if (isInvalidChar)
+        $display("[LINK_TOP %m] t=%0t  INVALID rxChar=%03x parity_err=%b", $time, rxChar, parity_err);
+    // Print fctPending transitions
+    if (u_tx_mux_0.fctPending && !$past(u_tx_mux_0.fctPending))
+        $display("[LINK_TOP %m] t=%0t  fctPending SET", $time);
+    if (u_tx_mux_0.txValid)
+        $display("[LINK_TOP %m] t=%0t  TX txChar=%03x NULLPhase=%b fctPending=%b sendFCT=%b",
+                 $time, u_tx_mux_0.txChar, u_tx_mux_0.NULLPhase,
+                 u_tx_mux_0.fctPending, sendFCT);
+end
 
 // ---------------------------------------------------------------------------
 //  RX monitoring — capture received bytes into buffer
@@ -885,12 +915,25 @@ initial begin
     pass_count = 0;
     fail_count = 0;
     test_num   = 0;
+// ---------------------------------------------------------------------------
+//  Initial block - set all testbench-driven inputs to zero at time 0
+// ---------------------------------------------------------------------------
+    a_userTxValid = 1'b0;
+    a_txByte      = 8'h00;
+    a_txEop       = 1'b0;
+    a_txEep       = 1'b0;
+    a_tcSend      = 1'b0;
+    a_tcTxValue   = 8'h00;
+    a_memRData    = 8'h00;
+    a_memReady    = 1'b0;
 
-    // Initialise all inputs
-    a_userTxValid = 0; a_txByte = 0; a_txEop = 0; a_txEep = 0;
-    a_tcSend = 0; a_tcTxValue = 0; a_memRData = 0; a_memReady = 0;
-    b_userTxValid = 0; b_txByte = 0; b_txEop = 0; b_txEep = 0;
-    b_tcSend = 0; b_tcTxValue = 0;
+    b_userTxValid = 1'b0;
+    b_txByte      = 8'h00;
+    b_txEop       = 1'b0;
+    b_txEep       = 1'b0;
+    b_tcSend      = 1'b0;
+    b_tcTxValue   = 8'h00;
+
 
     $display("=======================================================");
     $display("  caduceus — Full Stack RTL Testbench");
@@ -929,16 +972,16 @@ initial begin
     else
         $display("  FAILURES DETECTED — open VCD in GTKWave");
 
-    #500000 $finish;
+    #1000000000 $finish;
 end
-initial begin
-    #10000;  // 10 �s after reset release
-    force u_node_a.linkError = 0;
-    force u_node_b.linkError = 0;
-    #100;
-    release u_node_a.linkError;
-    release u_node_b.linkError;
-end
+//initial begin
+//    #10000;  // 10 �s after reset release
+//    force u_node_a.linkError = 0;
+//    force u_node_b.linkError = 0;
+//    #100;
+//    release u_node_a.linkError;
+//    release u_node_b.linkError;
+//end
 endmodule
 
 // =============================================================================

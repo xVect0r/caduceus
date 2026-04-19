@@ -69,66 +69,142 @@ always @(posedge clk) begin
         endcase
     end
 end
+//always @(posedge clk) begin
+////    stateNext<=state;
+//    sendNULL<= 1'b0;
+//    sendFCT<= 1'b0;
+//    sendEOP<=1'b0;
+//    sendEEP<= 1'b0;
+//    linkRun<= 1'b0;
+//    linkConnecting<= 1'b0;
+//    linkError<= 1'b0;
+
+//    case (state)
+//        ERROR_RESET: begin
+//            linkError<=1'b1;     
+//            if(errWaitCnt==0) begin 
+//                stateNext<= ERROR_WAIT;
+//            end
+//            else stateNext<= ERROR_RESET;
+//        end
+//        ERROR_WAIT: begin
+//            linkError=1'b1;
+//            if(anyErr) stateNext<=ERROR_RESET;
+//            else begin 
+//                if(errWaitCnt==0) begin 
+//                    stateNext<=READY;
+//                    linkError<=1'b0;
+//                end 
+//                else stateNext<=ERROR_WAIT;
+//            end
+//        end
+//        READY: begin
+//            if(anyErr) stateNext<=ERROR_RESET;
+//            else begin
+//                sendNULL<=1'b1;
+//                if(gotNULL) stateNext<=STARTED;
+//                else stateNext<= READY;
+//            end
+//        end
+//        STARTED: begin
+//            if(anyErr) stateNext<=ERROR_RESET;
+//            else begin
+//                sendNULL<=1'b1;
+//                sendFCT<=1'b1;
+//                if(gotFCT) stateNext<=CONNECTING;
+//                else stateNext<=STARTED;
+//            end
+//        end
+//        CONNECTING: begin
+//        if(anyErr) stateNext<=ERROR_RESET;
+//        else begin
+//            linkConnecting<=1'b1;
+//            sendFCT<=1'b1;
+//            if(gotFCT || gotNULL || gotNchar || gotEOP || gotEEP)
+//                stateNext <= RUN;
+//            else stateNext<=CONNECTING;
+//            end
+//        end
+//        RUN: begin
+//            if(anyErr) stateNext<=ERROR_RESET;
+//            else linkRun<=1'b1;
+//        end
+//        default:  stateNext<=ERROR_RESET;
+//    endcase
+//end
+
 always @(*) begin
-    stateNext=state;
-    sendNULL= 1'b0;
-    sendFCT= 1'b0;
-    sendEOP=1'b0;
-    sendEEP= 1'b0;
-    linkRun= 1'b0;
-    linkConnecting= 1'b0;
-    linkError= 1'b0;
+    // Default outputs
+    sendNULL      = 1'b0;
+    sendFCT       = 1'b0;
+    sendEOP       = 1'b0;
+    sendEEP       = 1'b0;
+    linkRun       = 1'b0;
+    linkConnecting = 1'b0;
+    linkError     = 1'b0;
+    stateNext     = state;   // default hold
 
     case (state)
         ERROR_RESET: begin
-            linkError=1'b1;     
-            if(errWaitCnt==0) begin 
-                stateNext= ERROR_WAIT;
-            end
-            else stateNext= ERROR_RESET;
+            linkError = 1'b1;
+            if (errWaitCnt == 0)
+                stateNext = ERROR_WAIT;
+            else
+                stateNext = ERROR_RESET;
         end
         ERROR_WAIT: begin
-            linkError=1'b1;
-            if(anyErr) stateNext=ERROR_RESET;
-            else begin 
-                if(errWaitCnt==0)stateNext=READY; 
-                else stateNext=ERROR_WAIT;
-            end
+            linkError = 1'b1;
+            if (anyErr)
+                stateNext = ERROR_RESET;
+            else if (errWaitCnt == 0)
+                stateNext = READY;
+            else
+                stateNext = ERROR_WAIT;
         end
         READY: begin
-            if(anyErr) stateNext=ERROR_RESET;
+            if (anyErr)
+                stateNext = ERROR_RESET;
             else begin
-                sendNULL=1'b1;
-                if(gotNULL) stateNext=STARTED;
-                else stateNext= READY;
+                sendNULL = 1'b1;
+                if (gotNULL)
+                    stateNext = STARTED;
+                else
+                    stateNext = READY;
             end
         end
         STARTED: begin
-            if(anyErr) stateNext=ERROR_RESET;
+            if (anyErr)
+                stateNext = ERROR_RESET;
             else begin
-                sendNULL=1'b1;
-                sendFCT=1'b1;
-                if(gotFCT) stateNext=CONNECTING;
-                else stateNext=STARTED;
+                sendNULL = 1'b1;
+                sendFCT  = 1'b1;
+                if (gotFCT)
+                    stateNext = CONNECTING;
+                else
+                    stateNext = STARTED;
             end
         end
         CONNECTING: begin
-            if(anyErr) stateNext=ERROR_RESET;
+            if (anyErr)
+                stateNext = ERROR_RESET;
             else begin
-                linkConnecting=1'b1;
-                sendFCT=1'b1;
-//                if(gotEEP||gotEOP||gotNchar)stateNext=RUN; 
-                if(gotNULL) stateNext<=RUN;
-                else stateNext=CONNECTING;
+                linkConnecting = 1'b1;
+                sendFCT        = 1'b1;
+                if (gotFCT || gotNULL || gotNchar || gotEOP || gotEEP)
+                    stateNext = RUN;
+                else
+                    stateNext = CONNECTING;
             end
         end
         RUN: begin
-            if(anyErr) stateNext=ERROR_RESET;
-            else linkRun=1'b1;
+            if (anyErr)
+                stateNext = ERROR_RESET;
+            else
+                linkRun = 1'b1;
         end
-        default:  stateNext=ERROR_RESET;
+        default: stateNext = ERROR_RESET;
     endcase
-    end
+end
 
 
     

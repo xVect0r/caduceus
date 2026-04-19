@@ -46,17 +46,23 @@ endfunction
     
 
 reg xor_prev;
+reg sin_prev;
+
 reg[3:0] bit_cnt_g;
 reg[9:0] rx_buf;
+reg rx_en_prev;
 
 wire xor_cur = din^sin;
 wire dsEdge = xor_cur^xor_prev;
 wire[3:0] bit_index = gray_to_bin(bit_cnt_g);
 wire last_bit=(bit_index==4'd9);
 
+wire decoded_bit = sin^sin_prev;
+
 always @(posedge clk) begin
     if (!rst_n) begin
         xor_prev     <= 1'b0;
+        sin_prev<=0;
         bit_cnt_g    <= 4'b0000;
         rx_buf       <= 10'b0;
         rx_char      <= 10'b0;
@@ -66,21 +72,48 @@ always @(posedge clk) begin
         rx_valid     <= 1'b0;
         disc_refresh <= 1'b0;
         xor_prev <= xor_cur;
-        if (rx_en && dsEdge) begin
-            rx_buf[bit_index] <= din;
-            disc_refresh <= 1'b1;
-            if (last_bit) begin
-                rx_char   <= {din, rx_buf[8:0]};   
-                rx_valid  <= 1'b1;
-                bit_cnt_g <= 4'b0000;               
-            end else begin
+        sin_prev<=sin;
+        // if (rx_en && dsEdge) begin
+        //     rx_buf[bit_index] <= din;
+        //     disc_refresh <= 1'b1;
+        //     if (last_bit) begin
+        //         rx_char   <= {din, rx_buf[8:0]};   
+        //         rx_valid  <= 1'b1;
+        //         bit_cnt_g <= 4'b0000;               
+        //     end else begin
+        //         bit_cnt_g <= gray_increment(bit_cnt_g);
+        //     end
+        // end
+        
+        if (!rx_en) begin
+            bit_cnt_g <= 4'b0000;
+            rx_buf<=10'b0;
+
+        end
+        else if (dsEdge) begin
+            rx_buf[bit_index]<=decoded_bit;
+            disc_refresh<=1'b1;
+            if(last_bit) begin
+                rx_char<={decoded_bit,rx_buf[8:0]};
+                rx_valid<=1'b1;
+                bit_cnt_g<=4'b0000;
+                rx_buf<=10'b0;
+
+            end
+            else begin
                 bit_cnt_g <= gray_increment(bit_cnt_g);
             end
         end
-        if (!rx_en) begin
-            bit_cnt_g <= 4'b0000;
-        end
     end
 end
+
+// always@(posedge clk) begin 
+//     rx_en_prev<= rx_en;
+//     if(!rst_n|| (!rx_en_prev && rx_en)) begin
+//         xor_prev<=xor_cur;
+//         bit_cnt_g<= 4'b0000;
+//         rx_buf<=10'd0;
+//     end
+//end
 
 endmodule

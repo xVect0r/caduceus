@@ -11,7 +11,7 @@
 `define SPW_SYS_CLK_HZ          50_000_000
 `define SPW_LINK_BIT_RATE        10_000_000
 `define SPW_CLKS_PER_BIT         (`SPW_SYS_CLK_HZ / `SPW_LINK_BIT_RATE)
-`define SPW_DISC_TIMEOUT         64
+`define SPW_DISC_TIMEOUT         850
 `define SPW_ERRWAIT_TIMEOUT      320
 
 `define SPW_TX_FIFO_DEPTH        16

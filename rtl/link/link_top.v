@@ -75,7 +75,7 @@ flow_ctrl u_flow_ctrl_0(
     .txCreditOk(txCreditOk),
     .txCredits(txCredits),
     .rxBuffCount(rxBuffCount),
-    .creditErr(creditErr)
+    .creditErr(creditErr) 
 );
 
 
@@ -125,5 +125,30 @@ link_fsm u_link_fsm_0(
     .linkError(linkError)
 
 );
+
+`ifdef SIMULATION
+reg [2:0] prev_state;
+always @(posedge clk) begin
+    prev_state <= u_link_fsm_0.state;
+    // Print on every FSM state change
+    if (u_link_fsm_0.state !== prev_state)
+        $display("[LINK_TOP %m] t=%0t  FSM %0d->%0d  linkRun=%b linkErr=%b linkConn=%b",
+                 $time, prev_state, u_link_fsm_0.state, linkRun, linkError, linkConnecting);
+    // Print every time a key char is decoded
+    if (isNULL)
+        $display("[LINK_TOP %m] t=%0t  isNULL rxChar=%03x", $time, rxChar);
+    if (isFCT)
+        $display("[LINK_TOP %m] t=%0t  isFCT  rxChar=%03x", $time, rxChar);
+    if (isInvalidChar)
+        $display("[LINK_TOP %m] t=%0t  INVALID rxChar=%03x parity_err=%b", $time, rxChar, parity_err);
+    // Print fctPending transitions
+    if (u_tx_mux_0.fctPending && !$past(u_tx_mux_0.fctPending))
+        $display("[LINK_TOP %m] t=%0t  fctPending SET", $time);
+    if (u_tx_mux_0.txValid)
+        $display("[LINK_TOP %m] t=%0t  TX txChar=%03x NULLPhase=%b fctPending=%b sendFCT=%b",
+                 $time, u_tx_mux_0.txChar, u_tx_mux_0.NULLPhase,
+                 u_tx_mux_0.fctPending, sendFCT);
+end
+`endif
     
 endmodule

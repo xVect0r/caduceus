@@ -73,6 +73,8 @@ wire nCharValid = rmapTxByteValid ? 1'b1:(userTxValid & linkRun);
 
 
 assign rmapTxByteAck = ncharAck & rmapTxByteValid;
+reg rx_en_r;
+always @(posedge clk) rx_en_r <= ~linkError;
  
 
 phy_top u_phy_top (
@@ -96,7 +98,7 @@ phy_top u_phy_top (
     .rx_valid(phyRxValid),
     .parity_err(parityErr),
 //    .rx_en(linkRun | linkConnecting),
-    .rx_en(~linkError),
+    .rx_en(rx_en_r),
     .arm_errwait(linkError),
     .arm_disc(linkRun | linkConnecting),
     .errwait_done(),
